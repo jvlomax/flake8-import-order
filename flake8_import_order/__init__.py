@@ -19,8 +19,10 @@ DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 IMPORT_FUTURE = 0
 IMPORT_STDLIB = 10
 IMPORT_3RD_PARTY = 20
-IMPORT_APP = 30
-IMPORT_APP_RELATIVE = 40
+IMPORT_DJANGO = 30
+IMPORT_DRF = 40
+IMPORT_APP = 50
+IMPORT_APP_RELATIVE = 60
 IMPORT_MIXED = -1
 
 
@@ -183,7 +185,10 @@ class ImportVisitor(ast.NodeVisitor):
 
         elif pkg in self.application_import_names:
             return IMPORT_APP
-
+        elif pkg == "django":
+            return IMPORT_DJANGO
+        elif pkg == "rest_framework":
+            return IMPORT_DRF
         elif isinstance(node, ast.ImportFrom) and node.level > 0:
             return IMPORT_APP_RELATIVE
 
@@ -270,6 +275,8 @@ class ImportOrderChecker(object):
             # STDLIBS, STDLIB_FROMS
             # 3RDPARTY[n], 3RDPARTY_FROM[n]
             # 3RDPARTY[n+1], 3RDPARTY_FROM[n+1]
+            # DJANGO, DJANGO_FROM
+            # DRF, DRF_FROM
             # APPLICATION, APPLICATION_FROM
 
             # import_type, names, level, is_star_import, imported_names,
